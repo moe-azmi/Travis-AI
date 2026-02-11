@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -6,20 +6,16 @@ app = Flask(__name__)
 def home():
     return "Travis AI server is running."
 
-@app.route("/api/hello", methods=["GET"])
-def hello():
-    return jsonify({
-        "status": "success",
-        "message": "Hello from Travis AI 🚀"
-    })
-
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    data = request.json
+    data = request.get_json()
     user_message = data.get("message", "")
 
+    response = f"You said: {user_message}"
+
     return jsonify({
-        "reply": f"You said: {user_message}"
+        "reply": response,
+        "status": "success"
     })
 
 if __name__ == "__main__":
