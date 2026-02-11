@@ -7,6 +7,12 @@ app = Flask(__name__)
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")
 
+
+@app.route("/")
+def home():
+    return "Travis AI is LIVE 🚀"
+
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.json
@@ -17,6 +23,7 @@ def chat():
     return jsonify({
         "reply": response.text
     })
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
