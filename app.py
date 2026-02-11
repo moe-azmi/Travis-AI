@@ -1,22 +1,17 @@
-from flask import Flask, jsonify, request
+import google.generativeai as genai
+import os
 
-app = Flask(__name__)
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-@app.route("/")
-def home():
-    return "Travis AI server is running."
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.get_json()
-    user_message = data.get("message", "")
+    user_message = data.get("message")
 
-    response = f"You said: {user_message}"
+    response = model.generate_content(user_message)
 
     return jsonify({
-        "reply": response,
-        "status": "success"
+        "reply": response.text
     })
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
