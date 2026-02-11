@@ -1,13 +1,15 @@
+from flask import Flask, request, jsonify
 import google.generativeai as genai
 import os
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+app = Flask(__name__)
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-pro")
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    data = request.get_json()
+    data = request.json
     user_message = data.get("message")
 
     response = model.generate_content(user_message)
@@ -15,3 +17,6 @@ def chat():
     return jsonify({
         "reply": response.text
     })
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
